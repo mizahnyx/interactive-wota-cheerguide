@@ -1,1 +1,1 @@
-/home/mizahnyx/Proyectos/interactive-wota-cheerguide/submodule/Urho3D/cmake_eclipse.sh
+../submodule/Urho3D/cmake_eclipse.sh
