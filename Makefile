@@ -22,9 +22,12 @@ build/game.emscripten: build/urho3d.emscripten
 	-DURHO3D_HOME=${CURDIR}/build/urho3d.emscripten
 	$(MAKE) -C build/game.emscripten
 
-build/game.x11: build/urho3d.x11
+build/game.x11: build/urho3d.x11 build/game.data
 	cd game && \
 	./cmake_generic.sh ${CURDIR}/build/game.x11 \
 	-DURHO3D_SAMPLES=0 -DURHO3D_C++11=1 \
 	-DURHO3D_HOME=${CURDIR}/build/urho3d.x11
 	$(MAKE) -C build/game.x11
+
+build/game.data:
+	blender -b -P export-scripts/export_assets.py
