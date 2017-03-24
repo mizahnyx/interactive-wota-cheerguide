@@ -11,6 +11,9 @@ if (COMMAND cmake_policy)
     cmake_policy (SET CMP0042 NEW)
 endif ()
 
+# JSON library
+include_directories(../submodule/json/src)
+
 # Set project name
 project (InteractiveWotaCheerguide)
 
