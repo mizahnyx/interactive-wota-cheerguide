@@ -1,0 +1,5 @@
+$#include "BrowserQueue.h"
+
+class URHO3D_API BrowserQueue : public Component
+{
+};
