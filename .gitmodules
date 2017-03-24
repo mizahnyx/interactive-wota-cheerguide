@@ -1,3 +1,6 @@
 [submodule "submodule/Urho3D"]
 	path = submodule/Urho3D
 	url = https://github.com/urho3d/Urho3D
+[submodule "submodule/json"]
+	path = submodule/json
+	url = https://github.com/nlohmann/json
