@@ -149,9 +149,9 @@ function HandleKeyUp(eventType, eventData)
     local key = eventData["Key"]:GetInt()
     -- Close console (if open) or exit when ESC is pressed
     if key == KEY_ESCAPE then
-        if console:IsVisible() then
-            console:SetVisible(false)
-        else
+        -- if console:IsVisible() then
+        --     console:SetVisible(false)
+        -- else
             if GetPlatform() == "Web" then
                 input.mouseVisible = true;
                 if (useMouseMode_ ~= MM_ABSOLUTE) then
@@ -160,7 +160,7 @@ function HandleKeyUp(eventType, eventData)
             else
                 engine:Exit();
             end
-        end
+        -- end
     end
 end
 

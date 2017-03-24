@@ -39,6 +39,13 @@
 
 #include <Urho3D/DebugNew.h>
 
+#include "tolua++.h"
+
+#include "BrowserQueue.h"
+
+// Exported functions
+TOLUA_API int tolua_BrowserQueue_open (lua_State* tolua_S);
+
 URHO3D_DEFINE_APPLICATION_MAIN(Urho3DPlayer);
 
 Urho3DPlayer::Urho3DPlayer(Context* context) :
@@ -200,6 +207,10 @@ void Urho3DPlayer::Start()
         // Instantiate and register the Lua script subsystem
         LuaScript* luaScript = new LuaScript(context_);
         context_->RegisterSubsystem(luaScript);
+        
+        // Register BrowserQueue API
+        BrowserQueue::RegisterObject(context_);
+        tolua_BrowserQueue_open(luaScript->GetState());
 
         // If script loading is successful, proceed to main loop
         if (luaScript->ExecuteFile(scriptFileName_))

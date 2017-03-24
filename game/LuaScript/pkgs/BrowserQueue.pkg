@@ -1,5 +1,11 @@
-$#include "BrowserQueue.h"
+$#include "../BrowserQueue.h"
 
-class URHO3D_API BrowserQueue : public Component
+class BrowserQueue : public Component
 {
+    BrowserQueue(Context* context);
+    virtual ~BrowserQueue();
+    std::string GetTestString();
 };
+
+$using namespace Urho3D;
+$#pragma warning(disable:4800)

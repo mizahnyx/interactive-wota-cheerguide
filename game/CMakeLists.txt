@@ -14,6 +14,9 @@ endif ()
 # JSON library
 include_directories(../submodule/json/src)
 
+# tolua++ library
+include_directories(../submodule/Urho3D/Source/ThirdParty/toluapp/include)
+
 # Set project name
 project (InteractiveWotaCheerguide)
 
@@ -27,7 +30,10 @@ include (UrhoCommon)
 set (TARGET_NAME index)
 
 # Define source files
-define_source_files ()
+#define_source_files ()
+file (GLOB_RECURSE CPP_FILES ./*.cpp)
+file (GLOB_RECURSE H_FILES ./*.h)
+set (SOURCE_FILES ${CPP_FILES} ${H_FILES})
 
 # Setup target with resource copying
 setup_main_executable ()
