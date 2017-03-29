@@ -1,7 +1,8 @@
+build
 game/bin/Data/Materials
 game/bin/Data/Models
 game/bin/Data/Scenes
 game/bin/Data/Textures
-build
+site/node_modules
 *.blend1
 *~
