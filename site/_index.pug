@@ -5,17 +5,37 @@ html(lang='es')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     // --
-    meta(name='description', content='Guía Interactiva para el Concierto de Despedida de °C-ute en México')
+    meta(name='description', content=título)
     meta(name='author', content='Mizahnyx')
     link(rel='icon', href='../../favicon.ico')
-    title Guía Interactiva para el Concierto de Despedida de °C-ute en México
+    title
+      = título
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css')
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Raleway')
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css')
+    link(rel='stylesheet', href='css/index.css')
   body
-    header
-      .container
+    .container
+      .row
         .twelve.columns
-          h1.separator Guía Interactiva para el Concierto de Despedida de °C-ute en México
+          h4.separator
+            = título
+    form.container
+      .row
+        .twelve.columns
+          label(for='cancion') Canción:
+          select#cancion(onchange='alCambiarCanción()')
+            each i in canciones
+              - var descripción = i.nombreRomaji + ' (' + i.nombreJaponés + ')'
+              option(value=i.id)
+                = descripción
+      .row
+        .six.columns
+          .video-wrapper
+            #youTubePlayer
+        .six.columns
+          .video-wrapper
+            canvas(style='background-color:red')
 
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
     script(src='js/index.js')
