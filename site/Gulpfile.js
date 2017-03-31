@@ -2,15 +2,27 @@ var gulp = require('gulp');
 var gulpPug = require('gulp-pug');
 var connect = require('gulp-connect');
 var gutil = require('gulp-util');
-var coffeescript = require('gulp-coffeescript');
+var coffee = require('gulp-coffee');
 var data = require('gulp-data');
 var less = require('gulp-less');
+var path = require('path');
 
 var TARGET_DIR = '../build/site';
+var EMSCRIPTEN_OUT = '../build/game.emscripten/bin';
+
+gulp.task('copy:emscripten', function() {
+    return gulp.src([
+        path.join(EMSCRIPTEN_OUT, '**/*.pak'),
+        path.join(EMSCRIPTEN_OUT, '**/*.data'),
+        path.join(EMSCRIPTEN_OUT, '**/*.mem'),
+        path.join(EMSCRIPTEN_OUT, '**/*.js')
+    ])
+        .pipe(gulp.dest(TARGET_DIR));
+});
  
 gulp.task('coffee', function() {
     return gulp.src(['**/*.coffee', '!node_modules/**/*.coffee'])
-        .pipe(coffeescript({bare: true}).on('error', gutil.log))
+        .pipe(coffee({bare: true}).on('error', gutil.log))
         .pipe(gulp.dest(TARGET_DIR));
 });
 
@@ -42,5 +54,5 @@ gulp.task('connect', function() {
     });
 });
 
-gulp.task('default', ['coffee', 'less', 'pug']);
+gulp.task('default', ['copy:emscripten', 'coffee', 'less', 'pug']);
 

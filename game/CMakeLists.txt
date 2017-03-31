@@ -27,7 +27,7 @@ set (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake/Modules)
 include (UrhoCommon)
 
 # Define target name
-set (TARGET_NAME index)
+set (TARGET_NAME interactive-wota-cheerguide)
 
 # Define source files
 #define_source_files ()
