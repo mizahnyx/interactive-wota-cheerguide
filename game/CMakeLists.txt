@@ -35,6 +35,9 @@ file (GLOB_RECURSE CPP_FILES ./*.cpp)
 file (GLOB_RECURSE H_FILES ./*.h)
 set (SOURCE_FILES ${CPP_FILES} ${H_FILES})
 
+# Extra flags
+SET (CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} --bind")
+
 # Setup target with resource copying
 setup_main_executable ()
 

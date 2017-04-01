@@ -7,6 +7,9 @@
 require "LuaScripts/Utilities/Sample"
 json = require "json"
 
+browserQueue_ = nil
+instructionText_ = nil
+
 function Start()
     -- Execute the common startup for samples
     SampleStart()
@@ -70,20 +73,19 @@ function CreateScene()
     cameraNode:LookAt(Vector3(0.0, 0.0, 0.0))
     
     experimentalNode = scene_:CreateChild("Experimental")
-    local browserQueue = experimentalNode:CreateComponent("BrowserQueue")
-    print(browserQueue:GetTestString())
+    browserQueue_ = experimentalNode:CreateComponent("BrowserQueue")
 end
 
 function CreateInstructions()
     -- Construct new Text object, set string to display and font to use
-    local instructionText = ui.root:CreateChild("Text")
-    instructionText:SetText("Use WASD keys and mouse to move")
-    instructionText:SetFont(cache:GetResource("Font", "Fonts/Anonymous Pro.ttf"), 15)
+    instructionText_ = ui.root:CreateChild("Text")
+    instructionText_:SetText("Use WASD keys and mouse to move")
+    instructionText_:SetFont(cache:GetResource("Font", "Fonts/Anonymous Pro.ttf"), 15)
 
     -- Position the text relative to the screen center
-    instructionText.horizontalAlignment = HA_CENTER
-    instructionText.verticalAlignment = VA_CENTER
-    instructionText:SetPosition(0, ui.root.height / 4)
+    instructionText_.horizontalAlignment = HA_CENTER
+    instructionText_.verticalAlignment = VA_CENTER
+    instructionText_:SetPosition(0, ui.root.height / 4)
 end
 
 function SetupViewport()
@@ -136,6 +138,13 @@ function SubscribeToEvents()
 end
 
 function HandleUpdate(eventType, eventData)
+   -- Check for BrowserQueue events
+   if browserQueue_ ~= nil then
+      if browserQueue_:Count() > 0 then
+         instructionText_:SetText(browserQueue_:Receive())
+      end
+   end
+   
     -- Take the frame time step, which is stored as a float
     local timeStep = eventData["TimeStep"]:GetFloat()
 

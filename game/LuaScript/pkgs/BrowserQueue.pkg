@@ -4,7 +4,9 @@ class BrowserQueue : public Component
 {
     BrowserQueue(Context* context);
     virtual ~BrowserQueue();
-    std::string GetTestString();
+    int Count();
+    std::string Receive();
+    void Send(std::string message);
 };
 
 $using namespace Urho3D;
