@@ -12,6 +12,44 @@ instructionText_ = nil
 ejeCamara_ = nil
 roll = 0.0
 
+wotaGirlsData_ = {}
+wotaGirlsData_["maimi"] = {
+   Vector3(1.0, 0.0, 0.0);
+   "Materials/Wota.Maimi.xml";
+   "Materials/Lightstick.Maimi.xml";
+   "Materials/LightstickLight.Maimi.xml"
+}
+wotaGirlsData_["nacky"] = {
+   Vector3(-1.0, 0.0, 0.0);
+   "Materials/Wota.Nacky.xml";
+   "Materials/Lightstick.Nacky.xml";
+   "Materials/LightstickLight.Nacky.xml"
+}
+wotaGirlsData_["airi"] = {
+   Vector3(0.0, 0.0, 0.0);
+   "Materials/Wota.Airi.xml";
+   "Materials/Lightstick.Airi.xml";
+   "Materials/LightstickLight.Airi.xml"
+}
+wotaGirlsData_["chisato"] = {
+   Vector3(2.0, 0.0, 0.0);
+   "Materials/Wota.Chisato.xml";
+   "Materials/Lightstick.Chisato.xml";
+   "Materials/LightstickLight.Chisato.xml"
+}
+wotaGirlsData_["maimai"] = {
+   Vector3(-2.0, 0.0, 0.0);
+   "Materials/Wota.MaiMai.xml";
+   "Materials/Lightstick.MaiMai.xml";
+   "Materials/LightstickLight.MaiMai.xml"
+}
+
+animationData_ = {}
+animationData_["stand"] = "Models/Stand.ani"
+
+wotaGirls_ = {}
+animations_ = {}
+
 function Start()
    -- Execute the common startup for samples
    SampleStart()
@@ -32,20 +70,32 @@ function Start()
    SubscribeToEvents()
 end
 
-function LoadWotaGirl(nodeName, materialFile, lightstickMaterialFile, lightstickLightMaterialFile)
-   local node = scene_:CreateChild(nodeName, materialFile, lightMaterialFile)
-   node.position = Vector3(0.0, 0.0, 0.0)
-   local object = node:CreateComponent("AnimatedModel")
-   object.model = cache:GetResource("Model", "Models/Woman.mdl")
-   -- local standAnimation = cache:GetResource("Animation", "Models/Stand.ani")
-   -- local state = object:AddAnimationState(standAnimation)
-   -- state.weight = 1.0
-   -- state.looped = true
-   object:SetMaterial(1, cache:GetResource("Material", lightstickLightMaterialFile))
-   object:SetMaterial(2, cache:GetResource("Material", "Materials/Hair.xml"))
-   object:SetMaterial(3, cache:GetResource("Material", materialFile))
-   object:SetMaterial(4, cache:GetResource("Material", lightstickMaterialFile))
-   return node, object
+function LoadAnimations()
+   for i,v in next, animationData_ do
+      animations_[i] = cache:GetResource("Animation", v)
+   end
+end
+
+function LoadWotaGirls()
+   for i,v in next, wotaGirlsData_ do
+      local node = scene_:CreateChild("WotaGirl."..i)
+      node.position = v[1]
+      local object = node:CreateComponent("AnimatedModel")
+      object.model = cache:GetResource("Model", "Models/Woman.mdl")
+      local animationStates = {}
+      for i2,v2 in next, animations_ do
+         animationStates[i2] = object:AddAnimationState(v2)
+      end
+      animationStates["stand"].weight = 1.0
+      animationStates["stand"].looped = true
+      
+      object:SetMaterial(1, cache:GetResource("Material", v[3]))
+      object:SetMaterial(2, cache:GetResource("Material", "Materials/Hair.xml"))
+      object:SetMaterial(3, cache:GetResource("Material", v[2]))
+      object:SetMaterial(4, cache:GetResource("Material", v[4]))
+
+      wotaGirls_[i] = {node, object, animationStates}
+   end
 end
 
 function CreateScene()
@@ -60,7 +110,21 @@ function CreateScene()
 
    ejeCamara_ = scene_:GetChild("Eje.Camara", true)
 
-   LoadWotaGirl("WotaGirl", "Materials/Wota.Maimi.xml", "Materials/Lightstick.Maimi.xml", "Materials/LightstickLight.Maimi.xml")
+   LoadAnimations()
+
+   LoadWotaGirls()
+
+   -- local wotaNode = nil
+   -- local wotaObject = nil
+   -- wotaNode, wotaObject =
+   --    LoadWotaGirl("WotaGirl",
+   --                 "Materials/Wota.Maimi.xml",
+   --                 "Materials/Lightstick.Maimi.xml",
+   --                 "Materials/LightstickLight.Maimi.xml")
+   -- local standAnimation = cache:GetResource("Animation", "Models/Stand.ani")
+   -- local state = wotaObject:AddAnimationState(standAnimation)
+   -- state.weight = 1.0
+   -- state.looped = true
    -- cameraNode:LookAt(Vector3(0.0, 0.0, 1.0))
       -- Create a child scene node (at world origin) and a StaticModel component into it. Set the StaticModel to show a simple
       -- plane mesh with a "stone" material. Note that naming the scene nodes is optional. Scale the scene node larger
