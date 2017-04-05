@@ -44,12 +44,6 @@ wotaGirlsData_["maimai"] = {
    "Materials/LightstickLight.MaiMai.xml"
 }
 
-animationData_ = {}
-animationData_["stand"] = "Models/Stand.ani"
-
-wotaGirls_ = {}
-animations_ = {}
-
 function Start()
    -- Execute the common startup for samples
    SampleStart()
@@ -70,31 +64,20 @@ function Start()
    SubscribeToEvents()
 end
 
-function LoadAnimations()
-   for i,v in next, animationData_ do
-      animations_[i] = cache:GetResource("Animation", v)
-   end
-end
-
 function LoadWotaGirls()
    for i,v in next, wotaGirlsData_ do
       local node = scene_:CreateChild("WotaGirl."..i)
       node.position = v[1]
       local object = node:CreateComponent("AnimatedModel")
       object.model = cache:GetResource("Model", "Models/Woman.mdl")
-      local animationStates = {}
-      for i2,v2 in next, animations_ do
-         animationStates[i2] = object:AddAnimationState(v2)
-      end
-      animationStates["stand"].weight = 1.0
-      animationStates["stand"].looped = true
-      
+      object.castShadows = true
+
       object:SetMaterial(1, cache:GetResource("Material", v[3]))
       object:SetMaterial(2, cache:GetResource("Material", "Materials/Hair.xml"))
       object:SetMaterial(3, cache:GetResource("Material", v[2]))
       object:SetMaterial(4, cache:GetResource("Material", v[4]))
-
-      wotaGirls_[i] = {node, object, animationStates}
+      node:CreateComponent("AnimationController")
+      node:CreateScriptObject("WotaGirl")
    end
 end
 
@@ -109,8 +92,6 @@ function CreateScene()
    cameraNode:CreateComponent("Camera")
 
    ejeCamara_ = scene_:GetChild("Eje.Camara", true)
-
-   LoadAnimations()
 
    LoadWotaGirls()
 
@@ -159,8 +140,9 @@ function CreateScene()
    -- cameraNode.position = Vector3(0.0, 0.75, -5.0)
    -- cameraNode:LookAt(Vector3(0.0, 0.0, 0.0))
    
-   -- experimentalNode = scene_:CreateChild("Experimental")
-   -- browserQueue_ = experimentalNode:CreateComponent("BrowserQueue")
+   local browserQueueNode = scene_:CreateChild("Experimental")
+   browserQueueNode:CreateComponent("BrowserQueue")
+   browserQueueNode:CreateScriptObject("BrowserQueue")
 end
 
 function CreateInstructions()
@@ -225,16 +207,32 @@ function SubscribeToEvents()
 end
 
 function HandleUpdate(eventType, eventData)
-   -- Check for BrowserQueue events
-   if browserQueue_ ~= nil then
-      if browserQueue_:Count() > 0 then
-         instructionText_:SetText(browserQueue_:Receive())
-      end
-   end
-   
    -- Take the frame time step, which is stored as a float
    local timeStep = eventData["TimeStep"]:GetFloat()
 
    -- Move the camera, scale movement with time step
    MoveCamera(timeStep)
+end
+
+WotaGirl = ScriptObject()
+
+function WotaGirl:Start()
+   local animationController = self.node:GetComponent("AnimationController", true)
+   animationController:PlayExclusive("Models/Stand.ani", 0, true)
+end
+
+BrowserQueue = ScriptObject()
+
+function BrowserQueue:Start()
+end
+
+function BrowserQueue:FixedUpdate(timeStep)
+   local browserQueue = self.node:GetComponent("BrowserQueue", true)
+   
+   if browserQueue ~= nil then
+      if browserQueue:Count() > 0 then
+         -- TODO: Send messages when needed
+         print(browserQueue:Receive())
+      end
+   end
 end
