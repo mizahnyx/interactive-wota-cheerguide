@@ -65,20 +65,20 @@ build/game.data:
 	  | sed -e s#Lightstick.png#lightstick.maimai.png# > \
 	  game/bin/Data/Materials/Lightstick.MaiMai.xml
 	cp art/wota-girl/*.png game/bin/Data/Textures
-	cat game/bin/Data/Materials/Lightstick.Maimi.xml \
-	  | sed -e s#Diff.xml#DiffUnlit.xml# > \
+	cat "game/bin/Data/Materials/Lightstick Light.xml" \
+	  | sed -e s#Lightstick.png#lightstick.maimi.png# > \
 	  game/bin/Data/Materials/LightstickLight.Maimi.xml 
-	cat game/bin/Data/Materials/Lightstick.Nacky.xml \
-	  | sed -e s#Diff.xml#DiffUnlit.xml# > \
+	cat "game/bin/Data/Materials/Lightstick Light.xml" \
+	  | sed -e s#Lightstick.png#lightstick.nacky.png# > \
 	  game/bin/Data/Materials/LightstickLight.Nacky.xml 
-	cat game/bin/Data/Materials/Lightstick.Airi.xml \
-	  | sed -e s#Diff.xml#DiffUnlit.xml# > \
+	cat "game/bin/Data/Materials/Lightstick Light.xml" \
+	  | sed -e s#Lightstick.png#lightstick.airi.png# > \
 	  game/bin/Data/Materials/LightstickLight.Airi.xml 
-	cat game/bin/Data/Materials/Lightstick.Chisato.xml \
-	  | sed -e s#Diff.xml#DiffUnlit.xml# > \
+	cat "game/bin/Data/Materials/Lightstick Light.xml" \
+	  | sed -e s#Lightstick.png#lightstick.chisato.png# > \
 	  game/bin/Data/Materials/LightstickLight.Chisato.xml 
-	cat game/bin/Data/Materials/Lightstick.MaiMai.xml \
-	  | sed -e s#Diff.xml#DiffUnlit.xml# > \
+	cat "game/bin/Data/Materials/Lightstick Light.xml" \
+	  | sed -e s#Lightstick.png#lightstick.maimai.png# > \
 	  game/bin/Data/Materials/LightstickLight.MaiMai.xml 
 
 

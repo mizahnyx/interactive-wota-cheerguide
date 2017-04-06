@@ -72,10 +72,10 @@ function LoadWotaGirls()
       object.model = cache:GetResource("Model", "Models/Woman.mdl")
       object.castShadows = true
 
-      object:SetMaterial(1, cache:GetResource("Material", v[3]))
+      object:SetMaterial(0, cache:GetResource("Material", v[3]))
+      object:SetMaterial(1, cache:GetResource("Material", v[4]))
       object:SetMaterial(2, cache:GetResource("Material", "Materials/Hair.xml"))
       object:SetMaterial(3, cache:GetResource("Material", v[2]))
-      object:SetMaterial(4, cache:GetResource("Material", v[4]))
       node:CreateComponent("AnimationController")
       node:CreateScriptObject("WotaGirl")
    end
