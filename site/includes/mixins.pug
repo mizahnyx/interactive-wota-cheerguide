@@ -1,0 +1,14 @@
+mixin modal(id, título)
+  .modal.fade(id=id, tabindex='-1', role='dialog')
+    .modal-dialog(role='document')
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-label='Cerrar')
+            span(aria-hidden='true') ×
+          h4.modal-title
+            = título
+        .modal-body
+          block
+        .modal-footer
+          button.btn.btn-primary(type='button', data-dismiss='modal') Aceptar
+

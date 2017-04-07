@@ -19,7 +19,12 @@ gulp.task('copy:emscripten', function() {
     ])
         .pipe(gulp.dest(TARGET_DIR));
 });
- 
+
+gulp.task('copy:css', function() {
+    return gulp.src(['**/*.css', '!node_modules/**/*.css'])
+        .pipe(gulp.dest(TARGET_DIR));
+});
+
 gulp.task('coffee', function() {
     return gulp.src(['**/*.coffee', '!node_modules/**/*.coffee'])
         .pipe(coffee({bare: true}).on('error', gutil.log))
@@ -33,7 +38,11 @@ gulp.task('less', function () {
 });
 
 gulp.task('pug', function () {
-    return gulp.src(['**/*.pug', '!node_modules/**/*.pug'])
+    return gulp.src([
+        '**/*.pug',
+        '!node_modules/**/*.pug',
+        '!**/includes/**/*.pug'
+    ])
         .pipe(data(function (file) {
             var filenameWithoutExtension = file.path.substr(0, file.path.lastIndexOf('.'));
             return require(filenameWithoutExtension + '.json');
@@ -54,5 +63,10 @@ gulp.task('connect', function() {
     });
 });
 
-gulp.task('default', ['copy:emscripten', 'coffee', 'less', 'pug']);
+gulp.task('default', [
+    'copy:emscripten',
+    'copy:css',
+    'coffee',
+    'less',
+    'pug']);
 

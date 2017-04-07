@@ -1,5 +1,15 @@
+youTubePlayer = null;
+
 alCambiarCanción = () ->
-  document.write 'patito!<br>'
+  if youTubePlayer
+    id = $('#cancion').val()
+    youTubePlayer.cueVideoById id
+    Module.BrowserQueueSend JSON.stringify {
+      comando: 'secuencia'
+      secuencia: {
+        2.500: [1.500, 2]
+      }
+    }
   
 inicializaYouTube = () ->
   tag = document.createElement 'script'
@@ -8,12 +18,14 @@ inicializaYouTube = () ->
   console.log (document.getElementsByTagName 'script')[0]
   firstScriptTag.parentNode.insertBefore tag, firstScriptTag
 
-youTubePlayer = null;
+onPlayerStateChange = (event) ->
+  console.log event.data, YT.PlayerState
 
 onYouTubeIframeAPIReady = () ->
   youTubePlayer = new YT.Player 'youTubePlayer', {
-    videoId: (document.getElementById 'cancion').value,
-    events: {}
+    videoId: $('#cancion').val(),
+    events: 
+      onStateChange: onPlayerStateChange
   }
   
 #statusElement = document.getElementById('status')
@@ -123,10 +135,19 @@ inicializaCanvas = () ->
   script = document.createElement('script')
   script.src = 'interactive-wota-cheerguide.js'
   document.body.appendChild script
-  
+
+inicializaInterfaz = () ->
+  $(window).load ->
+    $('#loader').fadeOut 3000
+  $('#nav-acercade-referencias').on 'click', ->
+    $('#modal-referencias').modal 'show'
+  $('#nav-acercade-creditos').on 'click', ->
+    $('#modal-créditos').modal 'show'
+
 main = () ->
   inicializaYouTube()
   inicializaCanvas()
+  inicializaInterfaz()
   Module.setStatus 'Downloading...'
 
 main()

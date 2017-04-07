@@ -1,41 +1,36 @@
-doctype html
-html(lang='es')
-  head
-    meta(charset='utf-8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
-    // --
-    meta(name='description', content=título)
-    meta(name='author', content='Mizahnyx')
-    link(rel='icon', href='../../favicon.ico')
-    title
+extend includes/layout.pug
+
+block content
+  #loader
+    #loader-icon
+      h1 Cargando...
+  .container
+    h1
       = título
-    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css')
-    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Raleway')
-    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css')
-    link(rel='stylesheet', href='css/index.css')
-  body
-    .container
-      .row
-        .twelve.columns
-          h4.separator
-            = título
-    form.container
-      .row
-        .twelve.columns
+    p.lead
+      | Use this document as a way to quickly start any new project.
+      br
+      |  All you get is this text and a mostly barebones HTML document.
+  .container
+    .row
+      .col-sm-12
+        form.form-inline
           label(for='cancion') Canción:
-          select#cancion(onchange='alCambiarCanción()')
+          select#cancion.form-control(onchange='alCambiarCanción()')
             each i in canciones
               - var descripción = i.nombreRomaji + ' (' + i.nombreJaponés + ')'
               option(value=i.id)
                 = descripción
-      .row
-        .six.columns
-          .video-wrapper
-            #youTubePlayer
-        .six.columns
-          .video-wrapper
-            canvas#canvas
-
-    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
-    script(src='js/index.js')
+    .row
+      .col-sm-6
+        .video-wrapper
+          #youTubePlayer
+      .col-sm-6
+        .video-wrapper
+          canvas#canvas
+  +modal('modal-referencias', 'Referencias y Fuentes')
+    include:markdown-it includes/referencias.md
+  +modal('modal-créditos', 'Créditos')
+    include:markdown-it includes/creditos.md
+block scripts
+  script(src='js/index.js')
