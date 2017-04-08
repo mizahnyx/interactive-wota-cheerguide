@@ -29,7 +29,7 @@ function SampleStart()
         SubscribeToEvent("TouchBegin", "HandleTouchBegin")
     end
     -- Create logo
-    CreateLogo()
+    -- CreateLogo()
 
     -- Set custom window Title & Icon
     SetWindowTitleAndIcon()
@@ -49,15 +49,15 @@ end
 
 function InitTouchInput()
     touchEnabled = true
-    local layout = cache:GetResource("XMLFile", "UI/ScreenJoystick_Samples.xml")
+    -- local layout = cache:GetResource("XMLFile", "UI/ScreenJoystick_Samples.xml")
     local patchString = GetScreenJoystickPatchString()
     if patchString ~= "" then
         -- Patch the screen joystick layout further on demand
         local patchFile = XMLFile()
         if patchFile:FromString(patchString) then layout:Patch(patchFile) end
     end
-    screenJoystickIndex = input:AddScreenJoystick(layout, cache:GetResource("XMLFile", "UI/DefaultStyle.xml"))
-    input:SetScreenJoystickVisible(screenJoystickSettingsIndex, true)
+    ---screenJoystickIndex = input:AddScreenJoystick(layout, cache:GetResource("XMLFile", "UI/DefaultStyle.xml"))
+    --input:SetScreenJoystickVisible(screenJoystickSettingsIndex, true)
 end
 
 function SampleInitMouseMode(mode)
@@ -123,26 +123,27 @@ function CreateLogo()
 end
 
 function SetWindowTitleAndIcon()
-    local icon = cache:GetResource("Image", "Textures/UrhoIcon.png")
-    graphics:SetWindowIcon(icon)
-    graphics.windowTitle = "Urho3D Sample"
+    --local icon = cache:GetResource("Image", "Textures/UrhoIcon.png")
+    --graphics:SetWindowIcon(icon)
+   --graphics.windowTitle = "Urho3D Sample"
+   graphics:SetMode(555, 337)
 end
 
 function CreateConsoleAndDebugHud()
     -- Get default style
-    local uiStyle = cache:GetResource("XMLFile", "UI/DefaultStyle.xml")
-    if uiStyle == nil then
-        return
-    end
+    --local uiStyle = cache:GetResource("XMLFile", "UI/DefaultStyle.xml")
+    --if uiStyle == nil then
+    --    return
+    --end
 
     -- Create console
     engine:CreateConsole()
-    console.defaultStyle = uiStyle
+    --console.defaultStyle = uiStyle
     console.background.opacity = 0.8
 
     -- Create debug HUD
     engine:CreateDebugHud()
-    debugHud.defaultStyle = uiStyle
+    --debugHud.defaultStyle = uiStyle
 end
 
 function HandleKeyUp(eventType, eventData)

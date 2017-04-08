@@ -25,6 +25,11 @@ gulp.task('copy:css', function() {
         .pipe(gulp.dest(TARGET_DIR));
 });
 
+gulp.task('copy:cname', function() {
+    return gulp.src(['**/CNAME', '!node_modules/**/CNAME'])
+        .pipe(gulp.dest(TARGET_DIR));
+});
+
 gulp.task('coffee', function() {
     return gulp.src(['**/*.coffee', '!node_modules/**/*.coffee'])
         .pipe(coffee({bare: true}).on('error', gutil.log))
@@ -66,6 +71,7 @@ gulp.task('connect', function() {
 gulp.task('default', [
     'copy:emscripten',
     'copy:css',
+    'copy:cname',
     'coffee',
     'less',
     'pug']);

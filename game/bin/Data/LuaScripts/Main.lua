@@ -5,11 +5,11 @@
 --     - Handling keyboard and mouse input to move a freelook camera
 
 require "LuaScripts/Utilities/Sample"
-json = require "json"
+json = require "LuaScripts/json"
 
 browserQueue_ = nil
-instructionText_ = nil
 ejeCamara_ = nil
+instructionText_ = nil
 roll = 0.0
 
 wotaGirlsData_ = {}
@@ -65,6 +65,7 @@ function Start()
 end
 
 function LoadWotaGirls()
+   index = 1
    for i,v in next, wotaGirlsData_ do
       local node = scene_:CreateChild("WotaGirl."..i)
       node.position = v[1]
@@ -77,7 +78,9 @@ function LoadWotaGirls()
       object:SetMaterial(2, cache:GetResource("Material", "Materials/Hair.xml"))
       object:SetMaterial(3, cache:GetResource("Material", v[2]))
       node:CreateComponent("AnimationController")
-      node:CreateScriptObject("WotaGirl")
+      local wotaGirl = node:CreateScriptObject("WotaGirl")
+      wotaGirl.index = index
+      index = index*2
    end
 end
 
@@ -153,8 +156,9 @@ function CreateInstructions()
 
    -- Position the text relative to the screen center
    instructionText_.horizontalAlignment = HA_CENTER
-   instructionText_.verticalAlignment = VA_CENTER
-   instructionText_:SetPosition(0, ui.root.height / 4)
+   instructionText_.verticalAlignment = VA_TOP
+   instructionText_:SetPosition(0, 0)
+   instructionText_:SetSize(ui.root.width, ui.root.height)
 end
 
 function SetupViewport()
@@ -204,6 +208,7 @@ end
 function SubscribeToEvents()
    -- Subscribe HandleUpdate() function for processing update events
    SubscribeToEvent("Update", "HandleUpdate")
+   SubscribeToEvent("SetInstructionText", "HandleSetInstructionText")
 end
 
 function HandleUpdate(eventType, eventData)
@@ -214,25 +219,81 @@ function HandleUpdate(eventType, eventData)
    MoveCamera(timeStep)
 end
 
+function HandleSetInstructionText(eventType, eventData)
+   instructionText_:SetText(eventData["Text"]:GetString())
+end
+
 WotaGirl = ScriptObject()
 
 function WotaGirl:Start()
    local animationController = self.node:GetComponent("AnimationController", true)
    animationController:PlayExclusive("Models/Stand.ani", 0, true)
+
+   self.animations = {
+      standardFuri = "Models/StandardFuri.ani"
+   }
+   
+   self:SubscribeToEvent(self.node, "Pause", "WotaGirl:HandlePause")
+   self:SubscribeToEvent(self.node, "Furi", "WotaGirl:HandleFuri")
+end
+
+function WotaGirl:HandlePause(eventType, eventData)
+   local animationController = self.node:GetComponent("AnimationController", true)
+   animationController:PlayExclusive("Models/Stand.ani", 0.5, true)
+end
+
+function WotaGirl:HandleFuri(eventType, eventData)
+   local animationController = self.node:GetComponent("AnimationController", true)
 end
 
 BrowserQueue = ScriptObject()
 
 function BrowserQueue:Start()
+   self.timestamp = Time:GetElapsedTime()
+   self.elapsed = 0.0
+   self.queue = {}
+   self.pause = true
+   self.COMMAND = {
+      PAUSE = 1,
+      PLAY = 2,
+      SCRIPT = 3
+   }
+   self:SubscribeToEvent(self.node, "AnimationTrigger", "BrowserQueue:HandleAnimationTrigger")
+end
+
+function BrowserQueue:HandleAnimationTrigger(eventType, eventData)
+end
+
+function BrowserQueue:ProcessCommand(command)
+   local eventData = VariantMap()
+   if command[1] == self.COMMAND.PAUSE then
+      self.node:SendEvent("Pause", eventData)
+   elseif command[1] == self.COMMAND.PLAY then
+      self.node:SendEvent("Play", eventData)
+   elseif command[1] == self.COMMAND.SCRIPT then
+      self.node:SendEvent("Script", eventData)
+   end
 end
 
 function BrowserQueue:FixedUpdate(timeStep)
+   local timestamp = Time:GetElapsedTime()
+   if not self.pause then
+      self.elapsed = self.elapsed + (timestamp - self.timestamp)
+      local eventData = VariantMap()
+      eventData["Text"] = tostring(self.elapsed)
+      self.node:SendEvent("SetInstructionText", eventData)
+   end
+   
    local browserQueue = self.node:GetComponent("BrowserQueue", true)
    
    if browserQueue ~= nil then
       if browserQueue:Count() > 0 then
-         -- TODO: Send messages when needed
-         print(browserQueue:Receive())
+         local commandString = tostring(browserQueue:Receive())
+         print(commandString)
+         local command = json.parse(commandString)
+         self:ProcessCommand(command)
       end
    end
+
+   self.timestamp = timestamp
 end
