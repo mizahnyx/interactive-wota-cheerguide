@@ -50,7 +50,8 @@ gulp.task('pug', function () {
     ])
         .pipe(data(function (file) {
             var filenameWithoutExtension = file.path.substr(0, file.path.lastIndexOf('.'));
-            return require(filenameWithoutExtension + '.json');
+            var d = require(filenameWithoutExtension + '.json');
+            d.timestamp = (new Date()).toString()
         }))
         .pipe(gulpPug({
             filename: '.pug',
