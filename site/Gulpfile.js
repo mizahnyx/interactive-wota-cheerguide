@@ -9,6 +9,7 @@ var path = require('path');
 
 var TARGET_DIR = '../build/site';
 var EMSCRIPTEN_OUT = '../build/game.emscripten/bin';
+var VERSION = '1.0.0 beta'
 
 gulp.task('copy:emscripten', function() {
     return gulp.src([
@@ -51,7 +52,8 @@ gulp.task('pug', function () {
         .pipe(data(function (file) {
             var filenameWithoutExtension = file.path.substr(0, file.path.lastIndexOf('.'));
             var d = require(filenameWithoutExtension + '.json');
-            d.timestamp = (new Date()).toString()
+            d.timestamp = (new Date()).toString();
+            d.version = VERSION;
             return d;
         }))
         .pipe(gulpPug({

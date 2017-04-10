@@ -137,12 +137,17 @@ inicializaCanvas = () ->
   document.body.appendChild script
 
 inicializaInterfaz = () ->
+  # TODO: Cambiar por un timeout que espere la respuesta de BrowserQueueReceive
   $(window).load ->
     $('#loader').fadeOut 3000
   $('#nav-acercade-referencias').on 'click', ->
     $('#modal-referencias').modal 'show'
   $('#nav-acercade-creditos').on 'click', ->
     $('#modal-créditos').modal 'show'
+  $('#nav-acercade-historial').on 'click', ->
+    $('#modal-historial').modal 'show'
+  $('#nav-acercade-notas').on 'click', ->
+    $('#modal-notas').modal 'show'
 
 main = () ->
   inicializaYouTube()

@@ -8,10 +8,11 @@ block content
     h1
       = título
     p.lead
-      | Use this document as a way to quickly start any new project.
+      | Selecciona una canción de °C-ute, y al reproducirla, en la otra ventana podrás ver su wotagei (ヲタ芸) sugerido.
       br
       |  All you get is this text and a mostly barebones HTML document.
-    p Generado en: #{timestamp}
+    p
+      em Versión #{version} generada en: #{timestamp}
   .container
     .row
       .col-sm-12
@@ -33,5 +34,9 @@ block content
     include:markdown-it includes/referencias.md
   +modal('modal-créditos', 'Créditos')
     include:markdown-it includes/creditos.md
+  +modal('modal-historial', 'Historial de Cambios')
+    include:markdown-it includes/historial.md
+  +modal('modal-notas', 'Notas')
+    include:markdown-it includes/notas.md
 block scripts
   script(src='js/index.js')
