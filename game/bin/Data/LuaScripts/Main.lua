@@ -278,9 +278,13 @@ function BrowserQueue:ProcessCommand(command)
       self.animationEnabled = false
       for i,v in ipairs(command[2]) do
 	 local timeStamp = v[1]
-	 local eventName = v[2]
+	 local eventType = v[2]
 	 local eventData = v[3]
 	 local vm = VariantMap()
+         for i2,v2 in next, eventData do
+            vm[i2] = v2
+         end
+         self.animation:SetEventFrame(timeStamp, eventType, vm)
       end
    end
 end

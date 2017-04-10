@@ -43,4 +43,23 @@ cd /opt/emsdk-portable/
 export PATH=$PATH:/opt/node-v6.10.2-linux-x86/bin
 ./emsdk update
 ./emsdk install sdk-master-32bit # sdk-master-64bit para sistemas de 64 bits
+exit
+
+# De vuelta como usuario normal
+# Ésto sólo necesita ejecutarse una sola vez, para activar el SDK
+# de Emscripten para el usuario actual
+/opt/emsdk-portable/emsdk activate sdk-master-32bit
+```
+
+### Blender3D y la plugin de exportación de Urho3D
+
+El ejecutable de Blender 3D, con el plugin de exportación de Urho3D instalado, debe de estar en el `$PATH`. Dicho plugin se puede bajar de
+
+[https://github.com/reattiva/Urho3D-Blender](https://github.com/reattiva/Urho3D-Blender)
+
+### Descargar el proyecto con Git
+
+```
+git clone --recursive https://github.com/mizahnyx/interactive-wota-cheerguide
+cd interactive-wota-cheerguide
 ```
