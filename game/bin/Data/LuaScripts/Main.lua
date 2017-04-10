@@ -258,6 +258,9 @@ function BrowserQueue:Start()
       PLAY = 2,
       SCRIPT = 3
    }
+   self.debugEnabled = true
+   self.animation = ValueAnimation()
+   self.animationEnabled = false
    self:SubscribeToEvent(self.node, "AnimationTrigger", "BrowserQueue:HandleAnimationTrigger")
 end
 
@@ -271,7 +274,14 @@ function BrowserQueue:ProcessCommand(command)
    elseif command[1] == self.COMMAND.PLAY then
       self.node:SendEvent("Play", eventData)
    elseif command[1] == self.COMMAND.SCRIPT then
-      self.node:SendEvent("Script", eventData)
+      self.animation = ValueAnimation()
+      self.animationEnabled = false
+      for i,v in ipairs(command[2]) do
+	 local timeStamp = v[1]
+	 local eventName = v[2]
+	 local eventData = v[3]
+	 local vm = VariantMap()
+      end
    end
 end
 
@@ -289,7 +299,9 @@ function BrowserQueue:FixedUpdate(timeStep)
    if browserQueue ~= nil then
       if browserQueue:Count() > 0 then
          local commandString = tostring(browserQueue:Receive())
-         print(commandString)
+	 if debugEnabled then	
+	    print(commandString)
+	 end
          local command = json.parse(commandString)
          self:ProcessCommand(command)
       end
