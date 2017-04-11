@@ -21,7 +21,7 @@ sudo apt install build-essential
 
 ### Node JS, última versión
 
-Nos bajamos el paquete del sitio oficial de NodeJS (versión LTS 6.10.2) y lo descomprimimos en un lugar estándar, por ejemplo, en `/opt/`. El subdirectorio ``bin` del directorio principal de NodeJS lo deberemos agregar a nuestra variable `$PATH`, a trávés, por ejemplo, de una línea al final de nuestro archivo ``-bashrc`:
+Nos bajamos el paquete del sitio oficial de NodeJS (versión LTS 6.10.2) y lo descomprimimos en un lugar estándar, por ejemplo, en `/opt/`. El subdirectorio `bin` del directorio principal de NodeJS lo deberemos agregar a nuestra variable `$PATH`, a trávés, por ejemplo, de una línea al final de nuestro archivo `.bashrc`:
 
 
 ```
@@ -86,6 +86,8 @@ make build/game.data
 make build/game.emscripten
 cd site
 npm install
+# Dos veces, la primera para instalar dependencias, la segunda para construir la página
+npm install 
 ./node_modules/.bin/gulp connect
 ```
 

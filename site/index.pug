@@ -31,11 +31,25 @@ block content
           canvas#canvas
     .row
       .col-sm-12
+        h3 Experimental
+        p 
+          | Puedes editar el wotagei de una canción en formato YAML en el
+          | cuadro de texto de abajo. Cuando el motor de juegos arranque, 
+          | no podrás escribir directamente en el cuadro de texto, pero 
+          | puedes copiar y pegar desde un editor de textos, como el Bloc
+          | de notas de Windows, o EMACS en Linux. 
         form
           .form-group
-            label(for='test-yaml') JSON
+            label(for='test-yaml') YAML
             textarea#test-yaml.form-control
-          button.btn#test-script(type='button') Enviar script JSON
+          button.btn#test-script(type='button') Enviar script YAML
+            | -
+            |   - 5.0
+            |   - Furi
+            |   -
+            |     Furi: Kecha
+            |     Duration: 4.0
+            |     Times: 3
           button.btn#test-play(type='button') Reproducir
           button.btn#test-pause(type='button') Pausar
   +modal('modal-referencias', 'Referencias y Fuentes')

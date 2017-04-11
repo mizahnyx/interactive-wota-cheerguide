@@ -228,11 +228,12 @@ WotaGirl = ScriptObject()
 function WotaGirl:Start()
    local animationController = self.node:GetComponent("AnimationController", true)
    animationController:PlayExclusive("Models/Stand.ani", 0, true)
-   
-   self:SubscribeToEvent("Furi", "WotaGirl:HandleFuri")
 
    self.counter = 0
    self.times = 0
+   
+   self:SubscribeToEvent("Furi", "WotaGirl:HandleFuri")
+   self:SubscribeToEvent(self.node, "AnimationTrigger", "WotaGirl:HandleAnimationTrigger")
 end
 
 function WotaGirl:HandleFuri(eventType, eventData)
@@ -241,11 +242,26 @@ function WotaGirl:HandleFuri(eventType, eventData)
    local animationData = cache:GetResource("Animation", animation)
    local length = animationData:GetLength()
       
-   animationController:SetSpeed(
+   animationController:PlayExclusive(animation, 0, true, 0.5)
+   animationController:SetSpeed(animation,
       animationData:GetLength() / eventData["Duration"]:GetFloat())
-   animationController:PlayExclusive(animation, 0, true)
-   local length2 = animationController:GetAnimationState(animation):GetAnimation():GetLength()
-   print("Length2: "..tostring(length2))
+   local animationData2 = animationController:GetAnimationState(animation):GetAnimation()
+   local data = Variant()
+   data["type"] = "counter"
+   animationData2:AddTrigger(animationData:GetLength(), false, data)
+   self.times = eventData["Times"]:GetFloat()
+   self.counter = 0
+end
+
+function WotaGirl:HandleAnimationTrigger(eventType, eventData)
+   local animationController = self.node:GetComponent("AnimationController", true)
+   if eventData["type"] == "counter" then
+      self.counter = self.counter + 1
+      if self.counter >= self.times then
+         self.counter = 0
+         animationController:PlayExclusive("Models/Stand.ani", 0, true, 0.5)
+      end
+   end
 end
 
 BrowserQueue = ScriptObject()
