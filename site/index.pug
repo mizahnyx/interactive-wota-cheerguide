@@ -42,14 +42,21 @@ block content
           .form-group
             label(for='test-yaml') YAML
             textarea#test-yaml.form-control
+              | -
+              |   - 1.0
+              |   - Furi
+              |   -
+              |     Furi: Kecha
+              |     Duration: 2.0
+              |     Times: 3
+              | -
+              |   - 2.0
+              |   - Text
+              |   -
+              |     Text: Aaa! Yossha Ikuzo!
+              |     Duration: 1.5
+              |     Who: Airi
           button.btn#test-script(type='button') Enviar script YAML
-            | -
-            |   - 5.0
-            |   - Furi
-            |   -
-            |     Furi: Kecha
-            |     Duration: 4.0
-            |     Times: 3
           button.btn#test-play(type='button') Reproducir
           button.btn#test-pause(type='button') Pausar
   +modal('modal-referencias', 'Referencias y Fuentes')

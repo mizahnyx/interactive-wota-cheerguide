@@ -12,6 +12,9 @@ ejeCamara_ = nil
 instructionText_ = nil
 roll = 0.0
 
+textTime_ = 0.0
+textDuration_ = 0.0
+
 wotaGirlsData_ = {}
 wotaGirlsData_["maimi"] = {
    Vector3(1.0, 0.0, 0.0);
@@ -151,7 +154,6 @@ end
 function CreateInstructions()
    -- Construct new Text object, set string to display and font to use
    instructionText_ = ui.root:CreateChild("Text")
-   instructionText_:SetText("Use WASD keys and mouse to move")
    instructionText_:SetFont(cache:GetResource("Font", "Fonts/Anonymous Pro.ttf"), 15)
 
    -- Position the text relative to the screen center
@@ -217,10 +219,40 @@ function HandleUpdate(eventType, eventData)
 
    -- Move the camera, scale movement with time step
    MoveCamera(timeStep)
+   
+   UpdateText(timeStep)
+end
+
+function UpdateText(timeStep)
+   if textTime_ < textDuration_ then
+      textTime_ = textTime_ + timeStep
+   else
+      if instructionText_ ~= nil then
+         instructionText_:SetText("")
+      end
+   end
 end
 
 function HandleText(eventType, eventData)
-   instructionText_:SetText(eventData["Text"]:GetString())
+   if eventData["Who"]:GetString() ~= nil then
+      local who = eventData["Who"]:GetString()
+      if who == "Maimi" then
+         instructionText_.color = Color(1.0, 0.0, 0.0)
+      elseif who == "Nacky" then
+         instructionText_.color = Color(0.16, 0.16, 1.0)
+      elseif who == "Airi" then
+         instructionText_.color = Color(1.0, 0.16, 0.5)
+      elseif who == "Chisato" then
+         instructionText_.color = Color(0.0, 0.67, 0.0)
+      elseif who == "MaiMai" then
+         instructionText_.color = Color(1.0, 0.8, 0.0)
+      end
+   else
+      instructionText_.color = Color(1.0, 1.0, 1.0)
+   end
+   instructionText_.text = eventData["Text"]:GetString()
+   textTime_ = 0.0
+   textDuration_ = eventData["Duration"]:GetFloat()
 end
 
 WotaGirl = ScriptObject()
@@ -229,8 +261,9 @@ function WotaGirl:Start()
    local animationController = self.node:GetComponent("AnimationController", true)
    animationController:PlayExclusive("Models/Stand.ani", 0, true)
 
-   self.counter = 0
-   self.times = 0
+   self.time = 0.0
+   self.stopTime = 0.0
+   self.playing = false
    
    self:SubscribeToEvent("Furi", "WotaGirl:HandleFuri")
    self:SubscribeToEvent(self.node, "AnimationTrigger", "WotaGirl:HandleAnimationTrigger")
@@ -240,22 +273,35 @@ function WotaGirl:HandleFuri(eventType, eventData)
    local animationController = self.node:GetComponent("AnimationController", true)
    local animation = "Models/"..eventData["Furi"]:GetString()..".ani"
    local animationData = cache:GetResource("Animation", animation)
-   local length = animationData:GetLength()
       
-   animationController:PlayExclusive(animation, 0, true, 0.5)
+   animationController:PlayExclusive(animation, 0, true, 0.25)
    animationController:SetSpeed(animation,
       animationData:GetLength() / eventData["Duration"]:GetFloat())
-   local animationData2 = animationController:GetAnimationState(animation):GetAnimation()
-   local data = Variant()
-   data["type"] = "counter"
-   animationData2:AddTrigger(animationData:GetLength(), false, data)
-   self.times = eventData["Times"]:GetFloat()
-   self.counter = 0
+      
+   self.time = 0.0
+   self.stopTime = eventData["Duration"]:GetFloat()*eventData["Times"]:GetFloat()
+   self.playing = true
+end
+
+function WotaGirl:FixedUpdate(timeStep)
+   local animationController = self.node:GetComponent("AnimationController", true)
+   
+   if self.playing then
+      self.time = self.time + timeStep
+      if self.time >= self.stopTime then
+         self.time = 0.0
+         self.stopTime = 0.0
+         self.playing = false
+         animationController:PlayExclusive("Models/Stand.ani", 0, true, 0.25)
+      end
+   end
 end
 
 function WotaGirl:HandleAnimationTrigger(eventType, eventData)
    local animationController = self.node:GetComponent("AnimationController", true)
    if eventData["type"] == "counter" then
+      print("counter: "..tostring(self.counter))
+      
       self.counter = self.counter + 1
       if self.counter >= self.times then
          self.counter = 0
@@ -289,12 +335,16 @@ function BrowserQueue:ProcessCommand(command)
       self.eventScript = {}
       
       for i,v in ipairs(command[2]) do
-	 local timeStamp = v[1]
-	 local eventType = v[2]
-	 local eventData = v[3]
-	 local vm = VariantMap()
+         local timeStamp = v[1]
+         local eventType = v[2]
+         local eventData = v[3]
+         local vm = VariantMap()
          for i2,v2 in next, eventData do
-            vm[i2] = v2
+            if i2 == "Color" then
+               vm[i2] = Color(i2[1], i2[2], i2[3])
+            else
+               vm[i2] = v2
+            end
          end
          local item = {
             time = timeStamp;

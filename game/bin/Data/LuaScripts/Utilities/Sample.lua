@@ -125,7 +125,7 @@ end
 function SetWindowTitleAndIcon()
     --local icon = cache:GetResource("Image", "Textures/UrhoIcon.png")
     --graphics:SetWindowIcon(icon)
-   --graphics.windowTitle = "Urho3D Sample"
+   graphics.windowTitle = "Guía Interactiva de Wotagei (ヲタ芸) para el concierto de °C-ute Cutie Circuit ~¡De vuelta a México!~ [Motor de juegos cargado!]"
    graphics:SetMode(555, 337)
 end
 
