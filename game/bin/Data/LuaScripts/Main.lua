@@ -208,7 +208,7 @@ end
 function SubscribeToEvents()
    -- Subscribe HandleUpdate() function for processing update events
    SubscribeToEvent("Update", "HandleUpdate")
-   SubscribeToEvent("SetInstructionText", "HandleSetInstructionText")
+   SubscribeToEvent("Text", "HandleText")
 end
 
 function HandleUpdate(eventType, eventData)
@@ -219,7 +219,7 @@ function HandleUpdate(eventType, eventData)
    MoveCamera(timeStep)
 end
 
-function HandleSetInstructionText(eventType, eventData)
+function HandleText(eventType, eventData)
    instructionText_:SetText(eventData["Text"]:GetString())
 end
 
@@ -228,54 +228,50 @@ WotaGirl = ScriptObject()
 function WotaGirl:Start()
    local animationController = self.node:GetComponent("AnimationController", true)
    animationController:PlayExclusive("Models/Stand.ani", 0, true)
-
-   self.animations = {
-      standardFuri = "Models/StandardFuri.ani"
-   }
    
-   self:SubscribeToEvent(self.node, "Pause", "WotaGirl:HandlePause")
    self:SubscribeToEvent(self.node, "Furi", "WotaGirl:HandleFuri")
-end
 
-function WotaGirl:HandlePause(eventType, eventData)
-   local animationController = self.node:GetComponent("AnimationController", true)
-   animationController:PlayExclusive("Models/Stand.ani", 0.5, true)
+   self.counter = 0
+   self.times = 0
 end
 
 function WotaGirl:HandleFuri(eventType, eventData)
    local animationController = self.node:GetComponent("AnimationController", true)
+   local animation = "Models/"..eventData["Furi"]:GetString()..".ani"
+   local animationData = cache:GetResource("Animation", animation)
+   local length = animationData:GetLength()
+   local length2 = animationController:GetAnimationState(animation):GetAnimation():GetLength()
+   print("Length2: "..tostring(length2))
+      
+   animationController:SetSpeed(
+      animationData:GetLength() / eventData["Duration"]:GetFloat())
+   animationController:PlayExclusive(animation, 0, true)
 end
 
 BrowserQueue = ScriptObject()
 
 function BrowserQueue:Start()
-   self.timestamp = Time:GetElapsedTime()
-   self.elapsed = 0.0
-   self.queue = {}
-   self.pause = true
+   self.time = 0.0
    self.COMMAND = {
       PAUSE = 1,
       PLAY = 2,
       SCRIPT = 3
    }
    self.debugEnabled = true
-   self.animation = ValueAnimation()
-   self.animationEnabled = false
-   self:SubscribeToEvent(self.node, "AnimationTrigger", "BrowserQueue:HandleAnimationTrigger")
-end
-
-function BrowserQueue:HandleAnimationTrigger(eventType, eventData)
+   self.playing = false
+   self.eventScript = {}
 end
 
 function BrowserQueue:ProcessCommand(command)
-   local eventData = VariantMap()
    if command[1] == self.COMMAND.PAUSE then
-      self.node:SendEvent("Pause", eventData)
+      self.playing = false
    elseif command[1] == self.COMMAND.PLAY then
-      self.node:SendEvent("Play", eventData)
+      self.playing = true
    elseif command[1] == self.COMMAND.SCRIPT then
-      self.animation = ValueAnimation()
-      self.animationEnabled = false
+      self.playing = false
+      self.time = 0.0
+      self.eventScript = {}
+      
       for i,v in ipairs(command[2]) do
 	 local timeStamp = v[1]
 	 local eventType = v[2]
@@ -284,19 +280,25 @@ function BrowserQueue:ProcessCommand(command)
          for i2,v2 in next, eventData do
             vm[i2] = v2
          end
-         self.animation:SetEventFrame(timeStamp, eventType, vm)
+         local item = {
+            time = timeStamp;
+            eventType = eventType;
+            eventData = vm;
+            flag = false
+         }
+         table.insert(self.eventScript, item)
       end
    end
 end
 
 function BrowserQueue:FixedUpdate(timeStep)
-   local timestamp = Time:GetElapsedTime()
-   if not self.pause then
-      self.elapsed = self.elapsed + (timestamp - self.timestamp)
-      local eventData = VariantMap()
-      eventData["Text"] = tostring(self.elapsed)
-      self.node:SendEvent("SetInstructionText", eventData)
-   end
+   -- local timestamp = Time:GetElapsedTime()
+   -- if not self.pause then
+   --    self.elapsed = self.elapsed + (timestamp - self.timestamp)
+   --    local eventData = VariantMap()
+   --    eventData["Text"] = tostring(self.elapsed)
+   --    self.node:SendEvent("SetInstructionText", eventData)
+   -- end
    
    local browserQueue = self.node:GetComponent("BrowserQueue", true)
    
@@ -311,5 +313,16 @@ function BrowserQueue:FixedUpdate(timeStep)
       end
    end
 
-   self.timestamp = timestamp
+   if self.playing then
+      self.time = self.time + timeStep
+   end
+
+   for i,v in ipairs(self.eventScript) do
+      if self.time > v.time and v.flag == false then
+         self.node:SendEvent(v.eventType, v.eventData)
+         v.flag = true 
+      end
+   end
+
+   -- self.timestamp = timestamp
 end

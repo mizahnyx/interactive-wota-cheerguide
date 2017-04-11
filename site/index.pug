@@ -29,6 +29,15 @@ block content
       .col-sm-6
         .video-wrapper
           canvas#canvas
+    .row
+      .col-sm-12
+        form
+          .form-group
+            label(for='test-yaml') JSON
+            textarea#test-yaml.form-control
+          button.btn#test-script(type='button') Enviar script JSON
+          button.btn#test-play(type='button') Reproducir
+          button.btn#test-pause(type='button') Pausar
   +modal('modal-referencias', 'Referencias y Fuentes')
     include:markdown-it includes/referencias.md
   +modal('modal-créditos', 'Créditos')
@@ -38,4 +47,5 @@ block content
   +modal('modal-notas', 'Notas')
     include:markdown-it includes/notas.md
 block scripts
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.8.3/js-yaml.min.js')
   script(src='js/index.js')

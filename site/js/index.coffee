@@ -1,6 +1,6 @@
 youTubePlayer = null;
 
-alCambiarCanción = () ->
+alCambiarCanción = ->
   if youTubePlayer
     id = $('#cancion').val()
     youTubePlayer.cueVideoById id
@@ -11,7 +11,7 @@ alCambiarCanción = () ->
       }
     }
   
-inicializaYouTube = () ->
+inicializaYouTube = ->
   tag = document.createElement 'script'
   tag.src = 'https://www.youtube.com/iframe_api'
   firstScriptTag = (document.getElementsByTagName 'script')[0]
@@ -120,7 +120,7 @@ window.onerror = (event) ->
 
   return
   
-inicializaCanvas = () ->
+inicializaCanvas = ->
   do ->
     memoryInitializer = 'interactive-wota-cheerguide.html.mem'
     if typeof Module['locateFile'] == 'function'
@@ -136,7 +136,24 @@ inicializaCanvas = () ->
   script.src = 'interactive-wota-cheerguide.js'
   document.body.appendChild script
 
-inicializaInterfaz = () ->
+inicializaPrueba01 = ->
+  COMMAND = {
+    PAUSE: 1
+    PLAY: 2
+    SCRIPT: 3
+  }
+  $('#test-pause').click ->
+    Module.BrowserQueueSend JSON.stringify [ COMMAND.PAUSE ]
+  $('#test-play').click ->
+    Module.BrowserQueueSend JSON.stringify [ COMMAND.PLAY ]
+  $('#test-script').click ->
+    data = JSON.stringify [
+      COMMAND.SCRIPT
+      jsyaml.load($('#test-yaml').val())
+    ]
+    Module.BrowserQueueSend data
+
+inicializaInterfaz = ->
   # TODO: Cambiar por un timeout que espere la respuesta de BrowserQueueReceive
   $(window).load ->
     $('#loader').fadeOut 3000
@@ -153,6 +170,7 @@ main = () ->
   inicializaYouTube()
   inicializaCanvas()
   inicializaInterfaz()
+  inicializaPrueba01()
   Module.setStatus 'Downloading...'
 
 main()
