@@ -240,12 +240,12 @@ function WotaGirl:HandleFuri(eventType, eventData)
    local animation = "Models/"..eventData["Furi"]:GetString()..".ani"
    local animationData = cache:GetResource("Animation", animation)
    local length = animationData:GetLength()
-   local length2 = animationController:GetAnimationState(animation):GetAnimation():GetLength()
-   print("Length2: "..tostring(length2))
       
    animationController:SetSpeed(
       animationData:GetLength() / eventData["Duration"]:GetFloat())
    animationController:PlayExclusive(animation, 0, true)
+   local length2 = animationController:GetAnimationState(animation):GetAnimation():GetLength()
+   print("Length2: "..tostring(length2))
 end
 
 BrowserQueue = ScriptObject()
