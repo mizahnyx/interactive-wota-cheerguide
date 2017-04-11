@@ -229,7 +229,7 @@ function WotaGirl:Start()
    local animationController = self.node:GetComponent("AnimationController", true)
    animationController:PlayExclusive("Models/Stand.ani", 0, true)
    
-   self:SubscribeToEvent(self.node, "Furi", "WotaGirl:HandleFuri")
+   self:SubscribeToEvent("Furi", "WotaGirl:HandleFuri")
 
    self.counter = 0
    self.times = 0

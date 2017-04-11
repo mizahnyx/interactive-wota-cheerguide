@@ -1,4 +1,4 @@
-# Manual interactivo de wotagei (ヲタ芸) para el concierto de °C-ute Cutie Circuit ~¡De vuelta a México!~
+# Manual interactivo de wotagei (ヲタ芸) para el concierto de °C-ute Cutie Circuit ~ ¡De vuelta a México! ~
 
 ## Prerequisitos
 
@@ -13,6 +13,7 @@ Se necesitan instalar ciertos paquetes extra que necesita el motor de juegos de 
 
 ```
 sudo apt install libx11-dev libxrandr-dev libasound2-dev git cmake make
+sudo apt install libgl1-mesa-dev
 
 # Ubuntu y Mint requieren el siguiente comando también
 sudo apt install build-essential
@@ -57,9 +58,35 @@ El ejecutable de Blender 3D, con el plugin de exportación de Urho3D instalado, 
 
 [https://github.com/reattiva/Urho3D-Blender](https://github.com/reattiva/Urho3D-Blender)
 
+## Construcción del proyecto
+
 ### Descargar el proyecto con Git
 
 ```
 git clone --recursive https://github.com/mizahnyx/interactive-wota-cheerguide
 cd interactive-wota-cheerguide
 ```
+
+### Compilación de Urho3D
+
+Se requiere compilar para Linux y para Emscripten a la vez, debido a que necesitamos el AssetImporter de la versión para Linux para importar el escenario desde Blender3D. Previamente hay que cargar las variables de entorno de Emscripten, que están en el archivo `emsdk_env.sh` dentro del directorio de instalación de Emscripten Portable. 
+
+```
+source /opt/emsdk-portable/emsdk_env.sh
+make build/urho3d.x11
+make build/urho3d.emscripten
+```
+
+### Compilación y ejecución del proyecto
+
+Para compilar y ejecutar el sitio introducimos los siguientes comandos desde el directorio principal del proyecto:
+
+```
+make build/game.data
+make build/game.emscripten
+cd site
+npm install
+./node_modules/.bin/gulp connect
+```
+
+El sitio se podrá acceder con un navegador en `http://localhost:8080`.
