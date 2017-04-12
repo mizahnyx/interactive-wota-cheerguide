@@ -12,14 +12,13 @@ alCambiarCanción = ->
   if typeof youTubePlayer is 'object'
     id = $('#cancion').val()
     youTubePlayer.cueVideoById id
-  console.log $('#cancion').val(), wotagei
-  índice = wotageiÍndices[$('#cancion').val()]
-  console.log índice, wotagei[índice]
-  if índice
-    Module.BrowserQueueSend JSON.stringify [
-      COMMAND.SCRIPT,
-      wotagei[índice].wotagei
-    ]
+    if wotageiÍndices.hasOwnProperty id
+      índice = wotageiÍndices[id]
+      datos = JSON.stringify [
+        COMMAND.SCRIPT,
+        wotagei[índice].wotagei
+      ]
+      Module.BrowserQueueSend datos
   
 inicializaYouTube = ->
   tag = document.createElement 'script'
@@ -35,11 +34,11 @@ onPlayerStateChange = (event) ->
   if event.data == YT.PlayerState.PAUSED
     Module.BrowserQueueSend JSON.stringify [ COMMAND.PAUSE ]
 
-onYouTubeIframeAPIReady = () ->
+onYouTubeIframeAPIReady = ->
   youTubePlayer = new YT.Player 'youTubePlayer', {
     videoId: $('#cancion').val(),
     events:
-      onReady: alCambiarCanción
+      onReady: alInicializarYoutube
       onStateChange: onPlayerStateChange
   }
   
@@ -165,8 +164,6 @@ inicializaPrueba01 = ->
 
 inicializaInterfaz = ->
   # TODO: Cambiar por un timeout que espere la respuesta de BrowserQueueReceive
-  $(window).load ->
-    $('#loader').fadeOut 3000
   $('#nav-acercade-referencias').on 'click', ->
     $('#modal-referencias').modal 'show'
   $('#nav-acercade-creditos').on 'click', ->
@@ -191,14 +188,31 @@ inicializaWotagei = (callback) ->
       wotageiÍndices[wotagei[i].id] = i
     if typeof callback is 'function'
       callback()
-  
-main = () ->
+
+esperaMotorDeJuegos = (callback) ->
+  haCargadoElMotor = false
+  if typeof Module.BrowserQueueCount == 'function'
+    if Module.BrowserQueueCount() > 0
+      mensaje = Module.BrowserQueueReceive()
+      if mensaje == 'cargado'
+        haCargadoElMotor = true
+        if typeof callback is 'function'
+          callback()
+  if not haCargadoElMotor
+    setTimeout(-> esperaMotorDeJuegos callback, 50)
+    
+alInicializarYoutube = ->
   inicializaWotagei ->
-    inicializaYouTube()
-    $('#canción').on 'change', alCambiarCanción
+    esperaMotorDeJuegos ->
+      $('#loader').fadeOut 3000
+      $('#canción').on 'change', alCambiarCanción
+      alCambiarCanción()
+
+main = ->
   inicializaCanvas()
   inicializaInterfaz()
   inicializaPrueba01()
+  inicializaYouTube()
   Module.setStatus 'Downloading...'
 
 main()

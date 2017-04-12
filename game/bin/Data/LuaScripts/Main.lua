@@ -100,6 +100,7 @@ function CreateScene()
    ejeCamara_ = scene_:GetChild("Eje.Camara", true)
 
    LoadWotaGirls()
+   
 
    -- local wotaNode = nil
    -- local wotaObject = nil
@@ -147,8 +148,10 @@ function CreateScene()
    -- cameraNode:LookAt(Vector3(0.0, 0.0, 0.0))
    
    local browserQueueNode = scene_:CreateChild("Experimental")
-   browserQueueNode:CreateComponent("BrowserQueue")
+   local browserQueue = browserQueueNode:CreateComponent("BrowserQueue")
    browserQueueNode:CreateScriptObject("BrowserQueue")
+   -- Señalizar al navegador que el motor de juegos ha cargado
+   browserQueue:Send("cargado")
 end
 
 function CreateInstructions()
@@ -381,9 +384,9 @@ function BrowserQueue:FixedUpdate(timeStep)
    if browserQueue ~= nil then
       if browserQueue:Count() > 0 then
          local commandString = tostring(browserQueue:Receive())
-	 if debugEnabled then	
-	    print(commandString)
-	 end
+         if self.debugEnabled then	
+            print(commandString)
+         end
          local command = json.parse(commandString)
          self:ProcessCommand(command)
       end
