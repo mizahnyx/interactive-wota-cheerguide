@@ -17,11 +17,7 @@ block content
       .col-sm-12
         form.form-inline
           label(for='cancion') Canción:
-          select#cancion.form-control(onchange='alCambiarCanción()')
-            each i in canciones
-              - var descripción = i.nombreRomaji + ' (' + i.nombreJaponés + ')'
-              option(value=i.id)
-                = descripción
+          select#cancion.form-control
     .row
       .col-sm-6
         .video-wrapper

@@ -2,13 +2,25 @@
 
 - Eva Gagel
 
+#### Animación 3D
+
+- Mizahnyx
+
 #### Asesoría sobre wotagei (ヲタ芸) de concierto de °C-ute
 
 - Eva Gagel
 - Fabian P
 - Kyamei
 
-#### Desarrollo, modelado 3D y animación
+#### Control de Calidad / Pruebas
+
+- Akita Paradise
+
+#### Desarrollo
+
+- Mizahnyx
+
+#### Modelado 3D
 
 - Mizahnyx
 

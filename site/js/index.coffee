@@ -1,5 +1,6 @@
 youTubePlayer = null;
 wotagei = {};
+wotageiÍndices = {}
 
 COMMAND = {
   PAUSE: 1
@@ -8,13 +9,17 @@ COMMAND = {
 }
 
 alCambiarCanción = ->
-  if youTubePlayer
+  if typeof youTubePlayer is 'object'
     id = $('#cancion').val()
     youTubePlayer.cueVideoById id
-  Module.BrowserQueueSend JSON.stringify [
-    COMMAND.SCRIPT,
-    wotagei[$('#cancion').val()].wotagei
-  ]
+  console.log $('#cancion').val(), wotagei
+  índice = wotageiÍndices[$('#cancion').val()]
+  console.log índice, wotagei[índice]
+  if índice
+    Module.BrowserQueueSend JSON.stringify [
+      COMMAND.SCRIPT,
+      wotagei[índice].wotagei
+    ]
   
 inicializaYouTube = ->
   tag = document.createElement 'script'
@@ -26,14 +31,15 @@ inicializaYouTube = ->
 onPlayerStateChange = (event) ->
   console.log event.data, YT.PlayerState
   if event.data == YT.PlayerState.PLAYING
-    Module.BrowserQueueSend [ COMMAND.PLAY ]
+    Module.BrowserQueueSend JSON.stringify [ COMMAND.PLAY ]
   if event.data == YT.PlayerState.PAUSED
-    Module.BrowserQueueSend [ COMMAND.PAUSE ]
+    Module.BrowserQueueSend JSON.stringify [ COMMAND.PAUSE ]
 
 onYouTubeIframeAPIReady = () ->
   youTubePlayer = new YT.Player 'youTubePlayer', {
     videoId: $('#cancion').val(),
-    events: 
+    events:
+      onReady: alCambiarCanción
       onStateChange: onPlayerStateChange
   }
   
@@ -170,24 +176,29 @@ inicializaInterfaz = ->
   $('#nav-acercade-notas').on 'click', ->
     $('#modal-notas').modal 'show'
 
-inicializaWotagei = ->
+inicializaWotagei = (callback) ->
   $.ajax({
     url: 'data/wotagei.json'
     dataType: 'json'
   }).done (data) ->
     wotagei = data
     $('#cancion').empty()
-    for cancion in wotagei
-      html = "<option value=\"#{cancion.id}\">#{cancion.nombreRomaji} (#{cancion.nombreJaponés})</option>"
+    wotageiÍndices = {}
+    i = 0
+    for i in [0...wotagei.length]
+      html = "<option value=\"#{wotagei[i].id}\">#{wotagei[i].nombreRomaji} (#{wotagei[i].nombreJaponés})</option>"
       $('#cancion').append html
-      alCambiarCancion()      
+      wotageiÍndices[wotagei[i].id] = i
+    if typeof callback is 'function'
+      callback()
   
 main = () ->
-  inicializaYouTube()
+  inicializaWotagei ->
+    inicializaYouTube()
+    $('#canción').on 'change', alCambiarCanción
   inicializaCanvas()
   inicializaInterfaz()
   inicializaPrueba01()
-  inicializaWotagei()
   Module.setStatus 'Downloading...'
 
 main()
