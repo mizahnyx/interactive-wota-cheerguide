@@ -6,10 +6,12 @@ var coffee = require('gulp-coffee');
 var data = require('gulp-data');
 var less = require('gulp-less');
 var path = require('path');
+var exec = require('child_process').exec;
 
 var TARGET_DIR = '../build/site';
 var EMSCRIPTEN_OUT = '../build/game.emscripten/bin';
-var VERSION = '1.0.0 beta'
+var VERSION = '0.0.1 alfa'
+var REVISION = ''
 
 gulp.task('copy:emscripten', function() {
     return gulp.src([
@@ -29,6 +31,14 @@ gulp.task('copy:css', function() {
 gulp.task('copy:cname', function() {
     return gulp.src(['**/CNAME', '!node_modules/**/CNAME'])
         .pipe(gulp.dest(TARGET_DIR));
+});
+
+gulp.task('exec:revision', function(cb) {
+    exec('git rev-list --count HEAD', function (err, stdout, stderr) {
+        REVISION = stdout;
+        console.log(stderr);
+        cb(err);
+    });
 });
 
 gulp.task('coffee', function() {
@@ -54,6 +64,7 @@ gulp.task('pug', function () {
             var d = require(filenameWithoutExtension + '.json');
             d.timestamp = (new Date()).toString();
             d.version = VERSION;
+            d.revision = REVISION;
             return d;
         }))
         .pipe(gulpPug({
@@ -76,6 +87,7 @@ gulp.task('default', [
     'copy:emscripten',
     'copy:css',
     'copy:cname',
+    'exec:revision',
     'coffee',
     'less',
     'pug']);

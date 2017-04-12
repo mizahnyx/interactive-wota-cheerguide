@@ -1,3 +1,7 @@
+#### Actuación de voz
+
+- Eva Gagel
+
 #### Asesoría sobre wotagei (ヲタ芸) de concierto de °C-ute
 
 - Eva Gagel

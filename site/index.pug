@@ -11,7 +11,7 @@ block content
       | Selecciona una canción de °C-ute, y al reproducirla, en el otro recuadro podrás ver su wotagei (ヲタ芸) sugerido.
       br
     p
-      em Versión #{version} generada en: #{timestamp}
+      em Versión #{version}, Revisión #{revision}, generada en: #{timestamp}
   .container
     .row
       .col-sm-12
@@ -56,6 +56,11 @@ block content
               |     Text: Aaa! Yossha Ikuzo!
               |     Duration: 1.5
               |     Who: Airi
+              | -
+              |   - 3.0
+              |   - Audio
+              |   -
+              |     Audio: Hai
           button.btn#test-script(type='button') Enviar script YAML
           button.btn#test-play(type='button') Reproducir
           button.btn#test-pause(type='button') Pausar

@@ -211,6 +211,7 @@ function SubscribeToEvents()
    -- Subscribe HandleUpdate() function for processing update events
    SubscribeToEvent("Update", "HandleUpdate")
    SubscribeToEvent("Text", "HandleText")
+   SubscribeToEvent("Audio", "HandleAudio")
 end
 
 function HandleUpdate(eventType, eventData)
@@ -253,6 +254,15 @@ function HandleText(eventType, eventData)
    instructionText_.text = eventData["Text"]:GetString()
    textTime_ = 0.0
    textDuration_ = eventData["Duration"]:GetFloat()
+end
+
+function HandleAudio(eventType, eventData)
+   local soundFile = "Audio/"..eventData["Audio"]:GetString()..".ogg"
+   local sound = cache:GetResource("Sound", soundFile)
+   local soundSource = scene_:CreateComponent("SoundSource")
+   soundSource.soundType = SOUND_EFFECT
+   soundSource:SetAutoRemoveMode(REMOVE_COMPONENT)
+   soundSource:Play(sound)
 end
 
 WotaGirl = ScriptObject()
