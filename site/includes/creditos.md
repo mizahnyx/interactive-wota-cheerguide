@@ -6,6 +6,7 @@
 
 - Eva Gagel
 - Fabian P
+- Kyamei
 
 #### Desarrollo, modelado 3D y animación
 

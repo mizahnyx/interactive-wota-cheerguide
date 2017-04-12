@@ -7,11 +7,16 @@ var data = require('gulp-data');
 var less = require('gulp-less');
 var path = require('path');
 var exec = require('child_process').exec;
+var yaml = require('gulp-yaml');
 
 var TARGET_DIR = '../build/site';
 var EMSCRIPTEN_OUT = '../build/game.emscripten/bin';
-var VERSION = '0.0.1 alfa'
+var VERSION = '0.0.2 alfa'
 var REVISION = ''
+
+var PAGE_FUNCTIONS = {
+	index: function () {}
+};
 
 gulp.task('copy:emscripten', function() {
     return gulp.src([
@@ -40,6 +45,12 @@ gulp.task('exec:revision', function(cb) {
         cb(err);
     });
 });
+
+gulp.task('yaml', function() { 
+    return gulp.src(['**/*.yml', '!node_modules/**/*.yml'])
+        .pipe(yaml({ schema: 'DEFAULT_SAFE_SCHEMA' }))
+        .pipe(gulp.dest(TARGET_DIR));
+}); 
 
 gulp.task('coffee', function() {
     return gulp.src(['**/*.coffee', '!node_modules/**/*.coffee'])
@@ -88,6 +99,7 @@ gulp.task('default', [
     'copy:css',
     'copy:cname',
     'exec:revision',
+    'yaml',
     'coffee',
     'less',
     'pug']);

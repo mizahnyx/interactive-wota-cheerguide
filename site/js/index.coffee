@@ -1,15 +1,20 @@
 youTubePlayer = null;
+wotagei = {};
+
+COMMAND = {
+  PAUSE: 1
+  PLAY: 2
+  SCRIPT: 3
+}
 
 alCambiarCanción = ->
   if youTubePlayer
     id = $('#cancion').val()
     youTubePlayer.cueVideoById id
-    Module.BrowserQueueSend JSON.stringify {
-      comando: 'secuencia'
-      secuencia: {
-        2.500: [1.500, 2]
-      }
-    }
+  Module.BrowserQueueSend JSON.stringify [
+    COMMAND.SCRIPT,
+    wotagei[$('#cancion').val()].wotagei
+  ]
   
 inicializaYouTube = ->
   tag = document.createElement 'script'
@@ -20,6 +25,10 @@ inicializaYouTube = ->
 
 onPlayerStateChange = (event) ->
   console.log event.data, YT.PlayerState
+  if event.data == YT.PlayerState.PLAYING
+    Module.BrowserQueueSend [ COMMAND.PLAY ]
+  if event.data == YT.PlayerState.PAUSED
+    Module.BrowserQueueSend [ COMMAND.PAUSE ]
 
 onYouTubeIframeAPIReady = () ->
   youTubePlayer = new YT.Player 'youTubePlayer', {
@@ -137,11 +146,6 @@ inicializaCanvas = ->
   document.body.appendChild script
 
 inicializaPrueba01 = ->
-  COMMAND = {
-    PAUSE: 1
-    PLAY: 2
-    SCRIPT: 3
-  }
   $('#test-pause').click ->
     Module.BrowserQueueSend JSON.stringify [ COMMAND.PAUSE ]
   $('#test-play').click ->
@@ -166,11 +170,24 @@ inicializaInterfaz = ->
   $('#nav-acercade-notas').on 'click', ->
     $('#modal-notas').modal 'show'
 
+inicializaWotagei = ->
+  $.ajax({
+    url: 'data/wotagei.json'
+    dataType: 'json'
+  }).done (data) ->
+    wotagei = data
+    $('#cancion').empty()
+    for cancion in wotagei
+      html = "<option value=\"#{cancion.id}\">#{cancion.nombreRomaji} (#{cancion.nombreJaponés})</option>"
+      $('#cancion').append html
+      alCambiarCancion()      
+  
 main = () ->
   inicializaYouTube()
   inicializaCanvas()
   inicializaInterfaz()
   inicializaPrueba01()
+  inicializaWotagei()
   Module.setStatus 'Downloading...'
 
 main()
