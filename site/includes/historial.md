@@ -1,3 +1,7 @@
+#### 0.0.5 alfa
+
+- Se corrige la interfaz touch del motor de juegos (Incidencia 001)
+
 #### 0.0.4 alfa
 
 - Mejora de la pantalla de carga

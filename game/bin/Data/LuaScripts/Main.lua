@@ -188,11 +188,12 @@ function MoveCamera(timeStep)
    -- Use this frame's mouse motion to adjust camera node yaw and pitch. Clamp the pitch between -90 and 90 degrees
    local mouseMove = input.mouseMove
    roll = roll + MOUSE_SENSITIVITY * mouseMove.x
-   -- pitch = pitch + MOUSE_SENSITIVITY * mouseMove.y
+   pitch = pitch + MOUSE_SENSITIVITY * mouseMove.y
+   pitch = Clamp(pitch, -30.0, 30.0)
    -- pitch = Clamp(pitch, -90.0, 90.0)
 
    -- Construct new orientation for the camera scene node from yaw and pitch. Roll is fixed to zero
-   ejeCamara_.rotation = Quaternion(0.0, 0.0, roll)
+   ejeCamara_.rotation = Quaternion(pitch, 0.0, roll)
 
    -- Read WASD keys and move the camera scene node to the corresponding direction if they are pressed
    -- Use the Translate() function (default local space) to move relative to the node's orientation.

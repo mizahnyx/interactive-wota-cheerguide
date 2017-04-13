@@ -262,14 +262,14 @@ function HandleSceneUpdate(eventType, eventData)
             local state = input:GetTouch(i)
             if not state.touchedElement then -- Touch on empty space
                 if state.delta.x or state.delta.y then
-                    local camera = cameraNode:GetComponent("Camera")
-                    if not camera then return end
+                    local ejeCamara = scene_:GetChild("Eje.Camara", true)
+                    if not ejeCamera then return end
 
-                    yaw = yaw + TOUCH_SENSITIVITY * camera.fov / graphics.height * state.delta.x
+                    roll = roll + TOUCH_SENSITIVITY * camera.fov / graphics.height * state.delta.x
                     pitch = pitch + TOUCH_SENSITIVITY * camera.fov / graphics.height * state.delta.y
 
                     -- Construct new orientation for the camera scene node from yaw and pitch; roll is fixed to zero
-                    cameraNode:SetRotation(Quaternion(pitch, yaw, 0))
+                    ejeCamara:SetRotation(Quaternion(pitch, 0.0, roll))
                 else
                     -- Move the cursor to the touch position
                     local cursor = ui:GetCursor()
