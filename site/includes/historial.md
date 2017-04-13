@@ -1,3 +1,7 @@
+#### 0.0.6 alfa
+
+- Se agregan referencias a actividades durante el concierto
+
 #### 0.0.5 alfa
 
 - Se corrige la interfaz touch del motor de juegos (Incidencia 001)

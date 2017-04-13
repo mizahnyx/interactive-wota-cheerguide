@@ -163,7 +163,6 @@ inicializaPrueba01 = ->
     Module.BrowserQueueSend data
 
 inicializaInterfaz = ->
-  # TODO: Cambiar por un timeout que espere la respuesta de BrowserQueueReceive
   $('#nav-acercade-referencias').on 'click', ->
     $('#modal-referencias').modal 'show'
   $('#nav-acercade-creditos').on 'click', ->
@@ -172,6 +171,8 @@ inicializaInterfaz = ->
     $('#modal-historial').modal 'show'
   $('#nav-acercade-notas').on 'click', ->
     $('#modal-notas').modal 'show'
+  $('#nav-actividades-ganbacchae').on 'click', ->
+    $('#modal-ganbacchae').modal 'show'
 
 inicializaWotagei = (callback) ->
   $.ajax({
