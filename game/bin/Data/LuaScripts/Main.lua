@@ -239,7 +239,7 @@ function UpdateText(timeStep)
 end
 
 function HandleText(eventType, eventData)
-   if eventData["Who"]:GetString() ~= nil then
+   if eventData["Who"] ~= nil then
       local who = eventData["Who"]:GetString()
       if who == "Maimi" then
          instructionText_.color = Color(1.0, 0.0, 0.0)
