@@ -2,4 +2,20 @@
   nombreRomaji: Sekaiichi HAPPY na Onna no Ko
   nombreJaponés: 世界一HAPPYな女の子
   wotagei:
-    - [0.0, 'Text', {Text: En Construcción, Duration: 3600.0, Who: Airi}]
+    - [16.0, Furi, {Furi: LightstickUp, Duration: 1.125, Times: 8}]
+    - [16.0, Audio, {Audio: Hai}]
+    - [16.0, Text, {Text: Hai!, Duration: 0.75}]
+    - [17.125, Audio, {Audio: Hai}]
+    - [17.125, Text, {Text: Hai!, Duration: 0.75}]
+    - [18.25, Audio, {Audio: Hai}]
+    - [18.25, Text, {Text: Hai!, Duration: 0.75}]
+    - [19.375, Audio, {Audio: Hai}]
+    - [19.375, Text, {Text: Hai!, Duration: 0.75}]
+    - [20.5, Audio, {Audio: Hai}]
+    - [20.5, Text, {Text: Hai!, Duration: 0.75}]
+    - [21.625, Audio, {Audio: Hai}]
+    - [21.625, Text, {Text: Hai!, Duration: 0.75}]
+    - [22.75, Audio, {Audio: Hai}]
+    - [22.75, Text, {Text: Hai!, Duration: 0.75}]
+    - [47.00, Furi, {Furi: PPPHFuri, Duration: 2.5, Times: 8}]
+    - [74.00, Furi, {Furi: StandardFuri, Duration: 1.25, Times: 16}]
