@@ -11,7 +11,7 @@ var yaml = require('gulp-yaml');
 
 var TARGET_DIR = '../build/site';
 var EMSCRIPTEN_OUT = '../build/game.emscripten/bin';
-var VERSION = '0.0.6 alfa'
+var VERSION = '0.0.7 alfa-final'
 var REVISION = ''
 
 var PAGE_FUNCTIONS = {
