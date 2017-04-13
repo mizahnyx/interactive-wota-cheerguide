@@ -15,6 +15,7 @@
 #### Control de Calidad / Pruebas
 
 - Akita Paradise
+- Usagi Paradise
 
 #### Desarrollo
 
