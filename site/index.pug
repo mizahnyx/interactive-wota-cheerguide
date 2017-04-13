@@ -27,39 +27,13 @@ block content
           canvas#canvas
     .row
       .col-sm-12
-        h3 Experimental
+        h3 Aviso
         p 
-          | Puedes editar el wotagei de una canción en formato YAML en el
-          | cuadro de texto de abajo. Cuando el motor de juegos arranque, 
-          | no podrás escribir directamente en el cuadro de texto, pero 
-          | puedes copiar y pegar desde un editor de textos, como el Bloc
-          | de notas de Windows, o EMACS en Linux. 
-        form
-          .form-group
-            label(for='test-yaml') YAML
-            textarea#test-yaml.form-control
-              | -
-              |   - 1.0
-              |   - Furi
-              |   -
-              |     Furi: Kecha
-              |     Duration: 2.0
-              |     Times: 3
-              | -
-              |   - 2.0
-              |   - Text
-              |   -
-              |     Text: Aaa! Yossha Ikuzo!
-              |     Duration: 1.5
-              |     Who: Airi
-              | -
-              |   - 3.0
-              |   - Audio
-              |   -
-              |     Audio: Hai
-          button.btn#test-script(type='button') Enviar script YAML
-          button.btn#test-play(type='button') Reproducir
-          button.btn#test-pause(type='button') Pausar
+          | Por razones de tiempo, personal y herramientas de software
+          | es imposible terminar con éste sitio en el tiempo requerido. 
+          | Queda ésta página como prueba de concepto. 
+          | Mi agradecimiento más sincero a todas las personas que colaboraron,
+          | y una disculpa por no haber completado la meta en tiempo y forma.
   +modal('modal-referencias', 'Referencias y Fuentes')
     include:markdown-it includes/referencias.md
   +modal('modal-créditos', 'Créditos')
